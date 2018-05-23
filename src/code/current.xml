@@ -1,0 +1,53 @@
+<xml>
+<block type="variables_set" id="set_n_initial" inline="true" x="20" y="20">
+      <field name="VAR">n</field>
+      <value name="VALUE">
+        <block type="math_number">
+          <field name="NUM">1</field>
+        </block>
+      </value>
+      <next>
+        <block type="controls_repeat_ext" id="repeat" inline="true">
+          <value name="TIMES">
+            <block type="math_number">
+              <field name="NUM">4</field>
+            </block>
+          </value>
+          <statement name="DO">
+            <block type="wait_seconds" id="wait">
+              <field name="SECONDS">1.0</field>
+              <next>
+                <block type="variables_set" id="set_n_update" inline="true">
+                  <field name="VAR">n</field>
+                  <value name="VALUE">
+                    <block type="math_arithmetic" inline="true">
+                      <field name="OP">MULTIPLY</field>
+                      <value name="A">
+                        <block type="variables_get">
+                          <field name="VAR">n</field>
+                        </block>
+                      </value>
+                      <value name="B">
+                        <block type="math_number">
+                          <field name="NUM">2</field>
+                        </block>
+                      </value>
+                    </block>
+                  </value>
+                  <next>
+                    <block type="text_print" id="print" inline="false">
+                      <value name="TEXT">
+                        <block type="variables_get">
+                          <field name="VAR">n</field>
+                        </block>
+                      </value>
+                    </block>
+                  </next>
+                </block>
+              </next>
+            </block>
+          </statement>
+        </block>
+      </next>
+    </block>
+</xml>

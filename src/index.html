@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title></title>
+  <script src="acorn/acorn_interpreter.js"></script>
+  <script src="blockly/blockly_compressed.js"></script>
+  <script src="blockly/blocks_compressed.js"></script>
+  <script src="blockly/javascript_compressed.js"></script>
+  <script src="blockly/msg/js/en.js"></script>
+
+  <script src="blockly/wait_block.js"></script>
+
+  <style>
+    body {
+      background-color: #fff;
+      font-family: sans-serif;
+    }
+    h1 {
+      font-weight: normal;
+      font-size: 140%;
+    }
+  </style>
+</head>
+
+<body>
+  <p>
+    <button onclick="runCode()" id="runButton">Run</button>
+  </p>
+
+  <div style="width: 100%">
+    <div id="blocklyDiv" style="display: inline-block; height: 240px; width: 100%"></div>
+  </div>
+  <div style="width: 100%">
+    <textarea id="output" disabled="disabled"
+        style="display: inline-block; height: 100px; width: 100%;">
+    </textarea>
+  </div>
+
+  <xml id="toolbox" style="display: none">
+    <category name="Logic">
+      <block type="controls_if"></block>
+      <block type="logic_compare"></block>
+      <block type="logic_operation"></block>
+      <block type="logic_negate"></block>
+      <block type="logic_boolean"></block>
+    </category>
+    <category name="Loops">
+      <block type="controls_repeat_ext">
+        <value name="TIMES">
+          <block type="math_number">
+            <field name="NUM">10</field>
+          </block>
+        </value>
+      </block>
+      <block type="controls_whileUntil"></block>
+    </category>
+    <category name="Math">
+      <block type="math_number">
+        <field name="NUM">123</field>
+      </block>
+      <block type="math_arithmetic"></block>
+      <block type="math_single"></block>
+    </category>
+    <category name="Text">
+      <block type="text"></block>
+      <block type="text_length"></block>
+      <block type="text_print"></block>
+      <block type="text_prompt_ext">
+        <value name="TEXT">
+          <block type="text"></block>
+        </value>
+      </block>
+    </category>
+    <category name="Variables" custom="VARIABLE"></category>
+    <category name="Functions" custom="PROCEDURE"></category>
+    <category name="Time">
+      <block type="text"></block>
+      <block type="wait_seconds" id="wait"></block>
+    </category>
+    <category name="Robot">
+      <block type="text"></block>
+      <block type="wait_seconds" id="wait"></block>
+    </category>
+  </xml>
+
+  <xml id="startBlocks" style="display: none">
+    <block type="wait_seconds" id="wait">
+      <field name="SECONDS">1.0</field>
+    </block>
+  </xml>
+
+    <script>
+    function httpGetAsync(theUrl, callback)
+    {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.onreadystatechange = function() { 
+            if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+                callback(xmlHttp.responseText);
+        }
+        xmlHttp.open("GET", theUrl, true); // true for asynchronous 
+        xmlHttp.send(null);
+    }
+
+    var demoWorkspace = Blockly.inject('blocklyDiv',
+        {media: '../../blockly/media/',
+         toolbox: document.getElementById('toolbox')});
+
+    //Blockly.Xml.domToWorkspace(document.getElementById('startBlocks'),
+    //                           demoWorkspace);
+
+    // Exit is used to signal the end of a script.
+    Blockly.JavaScript.addReservedWords('exit');
+
+    var outputArea = document.getElementById('output');
+    var runButton = document.getElementById('runButton');
+    var myInterpreter = null;
+    var runner;
+
+    function initApi(interpreter, scope) {
+      // Add an API function for the alert() block, generated for "text_print" blocks.
+      var wrapper = function(text) {
+        text = text ? text.toString() : '';
+        outputArea.value = outputArea.value + '\n' + text;
+      };
+      interpreter.setProperty(scope, 'alert',
+          interpreter.createNativeFunction(wrapper));
+
+      // Add an API function for the prompt() block.
+      var wrapper = function(text) {
+        text = text ? text.toString() : '';
+        return interpreter.createPrimitive(prompt(text));
+      };
+      interpreter.setProperty(scope, 'prompt',
+          interpreter.createNativeFunction(wrapper));
+
+      // Add an API for the wait block.  See wait_block.js
+      initInterpreterWaitForSeconds(interpreter, scope);
+
+      // Add an API function for highlighting blocks.
+      var wrapper = function(id) {
+        id = id ? id.toString() : '';
+        return interpreter.createPrimitive(highlightBlock(id));
+      };
+      interpreter.setProperty(scope, 'highlightBlock',
+          interpreter.createNativeFunction(wrapper));
+    }
+
+    var highlightPause = false;
+    var latestCode = '';
+
+    function highlightBlock(id) {
+      demoWorkspace.highlightBlock(id);
+      highlightPause = true;
+    }
+
+    function resetStepUi(clearOutput) {
+      demoWorkspace.highlightBlock(null);
+      highlightPause = false;
+      runButton.disabled = '';
+
+      if (clearOutput) {
+        outputArea.value = '';
+        //outputArea.value = 'Program output:\n=================';
+      }
+    }
+
+    function generateCodeAndLoadIntoInterpreter() {
+      // Generate JavaScript code and parse it.
+      Blockly.JavaScript.STATEMENT_PREFIX = 'highlightBlock(%1);\n';
+      Blockly.JavaScript.addReservedWords('highlightBlock');
+      latestCode = Blockly.JavaScript.workspaceToCode(demoWorkspace);
+
+      resetStepUi(true);
+    }
+
+    function resetInterpreter() {
+      myInterpreter = null;
+      if (runner) {
+        clearTimeout(runner);
+        runner = null;
+      }
+    }
+
+    function runCode() {
+      if (!myInterpreter) {
+        // First statement of this code.
+        // Clear the program output.
+        resetStepUi(true);
+        runButton.disabled = 'disabled';
+
+        // And then show generated code in an alert.
+        // In a timeout to allow the outputArea.value to reset first.
+        setTimeout(function() {
+          //alert('Ready to execute the following code\n' +
+          //  '===================================\n' +
+          //  latestCode);
+
+          // Begin execution
+          highlightPause = false;
+          myInterpreter = new Interpreter(latestCode, initApi);
+          runner = function() {
+            if (myInterpreter) {
+              var hasMore = myInterpreter.run();
+              if (hasMore) {
+                // Execution is currently blocked by some async call.
+                // Try again later.
+                setTimeout(runner, 10);
+              } else {
+                // Program is complete.
+                outputArea.value += '\n\n<< Program complete >>';
+                resetInterpreter();
+                resetStepUi(false);
+              }
+            }
+          };
+          runner();
+        }, 1);
+        return;
+      }
+    }
+
+    // Load the interpreter now, and upon future changes.
+    generateCodeAndLoadIntoInterpreter();
+    demoWorkspace.addChangeListener(function(event) {
+        if (!(event instanceof Blockly.Events.Ui)) {
+          // Something changed. Parser needs to be reloaded.
+          resetInterpreter();
+          generateCodeAndLoadIntoInterpreter();
+        }
+    });
+    httpGetAsync("/code/current.xml", function(code){
+        var dom = Blockly.Xml.textToDom(code);
+        Blockly.Xml.domToWorkspace(dom, demoWorkspace);
+    });
+  </script>
+  
+</body>
+</html>
