@@ -1,12 +1,12 @@
 <xml id="toolbox" style="display: none">
-  <category name="Logic">
+  <category id="catLogic" colour="210" name="Logic">
     <block type="controls_if"></block>
     <block type="logic_compare"></block>
     <block type="logic_operation"></block>
     <block type="logic_negate"></block>
     <block type="logic_boolean"></block>
   </category>
-  <category name="Loops">
+  <category id="catLoops" colour="120" name="Loops">
     <block type="controls_repeat_ext">
       <value name="TIMES">
         <block type="math_number">
@@ -16,14 +16,14 @@
     </block>
     <block type="controls_whileUntil"></block>
   </category>
-  <category name="Math">
+  <category id="catMath" colour="230" name="Math">
     <block type="math_number">
       <field name="NUM">123</field>
     </block>
     <block type="math_arithmetic"></block>
     <block type="math_single"></block>
   </category>
-  <category name="Text">
+  <category id="catText" colour="160" name="Text">
     <block type="text"></block>
     <block type="text_length"></block>
     <block type="text_print"></block>
@@ -33,14 +33,12 @@
       </value>
     </block>
   </category>
-  <category name="Variables" custom="VARIABLE"></category>
-  <category name="Functions" custom="PROCEDURE"></category>
-  <category name="Time">
-    <block type="text"></block>
+  <category id="catVariables" colour="330" custom="VARIABLE" name="Variables"></category>
+  <category id="catFunctions" colour="290" custom="PROCEDURE" name="Functions"></category>
+  <category id="catRobot" colour="0" name="Time">
     <block type="wait_seconds" id="wait"></block>
   </category>
-  <category name="Robot">
-    <block type="text"></block>
+  <category id="catRobot" colour="60" name="Robot">
     <block type="wait_seconds" id="wait"></block>
   </category>
 </xml>

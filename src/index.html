@@ -14,13 +14,12 @@
 </head>
 
 <body>
-  <p>
-    <button onclick="runCode()" id="runButton">Run</button>
-    <button onclick="saveCode()" id="saveButton">Save</button>
-  </p>
-
   <div style="width: 100%">
-    <div id="blocklyDiv" style="display: inline-block; height: 240px; width: 100%"></div>
+    <p>
+      <button onclick="runCode()" id="runButton">Run</button>
+      <button onclick="saveCode()" id="saveButton">Save</button>
+    </p>
+    <div id="blocklyDiv" style="width:100%;height:240px"></div>
   </div>
   <div style="width: 100%">
     <textarea id="output" disabled="disabled"
