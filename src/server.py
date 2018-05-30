@@ -2,7 +2,7 @@
 #
 # https://blog.miguelgrinberg.com/post/designing-a-restful-api-with-python-and-flask
 #
-
+from xml.dom import minidom
 from flask import Flask, render_template, request, jsonify
 app = Flask(__name__, template_folder=".", static_folder='.', static_url_path='')
 
@@ -18,15 +18,6 @@ def main():
 # Rest Services
 #
 
-data = [
-    {
-        'id': 1
-    },
-    {
-        'id': 2
-    }
-]
-
 # /gpio?pin=1
 @app.route('/gpio', methods=['GET'])
 def get_gpio():
@@ -35,17 +26,17 @@ def get_gpio():
         pin=request.args.get('pin')
     return "pin=" + pin
 
-@app.route('/code', methods=['GET'])
-def get_code():
-    file = 'current'
-    if 'file' in request.args:
-        file = request.args.get('file')
-    return app.send_static_file(file + '.xml')
+@app.route('/code/<filename>', methods=['GET'])
+def get_code(filename):
+    return app.send_static_file("code/" + filename)
 
-@app.route('/data', methods=['GET'])
-def get_data():
-    return jsonify(data)
+@app.route('/code/<filename>', methods=['PUT'])
+def put_code(filename):
+    xml = minidom.parseString(request.data.decode("utf-8")).toprettyxml(indent="  ")
+    file = open("code/" + filename,'w')
+    file.write(xml)
+    file.close()
+    return ""
 
 if __name__ == "__main__":
    app.run(host='0.0.0.0', port=8080, debug=True)
-

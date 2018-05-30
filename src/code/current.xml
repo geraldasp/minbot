@@ -1,53 +1,57 @@
-<xml>
-<block type="variables_set" id="set_n_initial" inline="true" x="20" y="20">
-      <field name="VAR">n</field>
-      <value name="VALUE">
-        <block type="math_number">
-          <field name="NUM">1</field>
-        </block>
-      </value>
-      <next>
-        <block type="controls_repeat_ext" id="repeat" inline="true">
-          <value name="TIMES">
-            <block type="math_number">
-              <field name="NUM">4</field>
-            </block>
-          </value>
-          <statement name="DO">
-            <block type="wait_seconds" id="wait">
-              <field name="SECONDS">1.0</field>
-              <next>
-                <block type="variables_set" id="set_n_update" inline="true">
-                  <field name="VAR">n</field>
-                  <value name="VALUE">
-                    <block type="math_arithmetic" inline="true">
-                      <field name="OP">MULTIPLY</field>
-                      <value name="A">
-                        <block type="variables_get">
-                          <field name="VAR">n</field>
-                        </block>
-                      </value>
-                      <value name="B">
-                        <block type="math_number">
-                          <field name="NUM">2</field>
-                        </block>
-                      </value>
-                    </block>
-                  </value>
-                  <next>
-                    <block type="text_print" id="print" inline="false">
-                      <value name="TEXT">
-                        <block type="variables_get">
-                          <field name="VAR">n</field>
-                        </block>
-                      </value>
-                    </block>
-                  </next>
-                </block>
-              </next>
-            </block>
-          </statement>
-        </block>
-      </next>
-    </block>
+<?xml version="1.0" ?>
+<xml xmlns="http://www.w3.org/1999/xhtml">
+  <variables>
+    <variable id="S-r=q,Q[MY4_oh%`W*Wr" type="">n</variable>
+  </variables>
+  <block id="set_n_initial" inline="true" type="variables_set" x="20" y="20">
+    <field id="S-r=q,Q[MY4_oh%`W*Wr" name="VAR" variabletype="">n</field>
+    <value name="VALUE">
+      <block id="-8Sr[RGy_JaY5G;q+9hq" type="math_number">
+        <field name="NUM">1</field>
+      </block>
+    </value>
+    <next>
+      <block id="repeat" inline="true" type="controls_repeat_ext">
+        <value name="TIMES">
+          <block id="~jXm3z(jH}k]/9b%}je@" type="math_number">
+            <field name="NUM">4</field>
+          </block>
+        </value>
+        <statement name="DO">
+          <block id="wait" type="wait_seconds">
+            <field name="SECONDS">1</field>
+            <next>
+              <block id="set_n_update" inline="true" type="variables_set">
+                <field id="S-r=q,Q[MY4_oh%`W*Wr" name="VAR" variabletype="">n</field>
+                <value name="VALUE">
+                  <block id="/vOU/Zoi=t!U0/2WN@_*" type="math_arithmetic">
+                    <field name="OP">MULTIPLY</field>
+                    <value name="A">
+                      <block id="qOp]EU|cu7cYRqlm??Nj" type="variables_get">
+                        <field id="S-r=q,Q[MY4_oh%`W*Wr" name="VAR" variabletype="">n</field>
+                      </block>
+                    </value>
+                    <value name="B">
+                      <block id="mHT`#x6x$]kRswAZBU]$" type="math_number">
+                        <field name="NUM">2</field>
+                      </block>
+                    </value>
+                  </block>
+                </value>
+                <next>
+                  <block id="print" inline="false" type="text_print">
+                    <value name="TEXT">
+                      <block id="B/W!z(3/A6c73]$`y@cB" type="variables_get">
+                        <field id="S-r=q,Q[MY4_oh%`W*Wr" name="VAR" variabletype="">n</field>
+                      </block>
+                    </value>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </statement>
+      </block>
+    </next>
+  </block>
 </xml>

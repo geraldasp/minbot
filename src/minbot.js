@@ -1,5 +1,6 @@
 var outputArea = document.getElementById('output');
     var runButton = document.getElementById('runButton');
+    var saveButton = document.getElementById('saveButton');
     var myInterpreter = null;
     var runner;
 
@@ -12,6 +13,18 @@ var outputArea = document.getElementById('output');
         }
         xmlHttp.open("GET", theUrl, true); // true for asynchronous
         xmlHttp.send(null);
+    }
+
+    function httpPutAsync(theUrl, callback, body, contentType)
+    {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.onreadystatechange = function() {
+            if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+                callback(xmlHttp.responseText);
+        }
+        xmlHttp.open("PUT", theUrl, true); // true for asynchronous
+        xmlHttp.setRequestHeader("Content-type", contentType);
+        xmlHttp.send(body);
     }
 
     function initApi(interpreter, scope) {
@@ -77,6 +90,13 @@ var outputArea = document.getElementById('output');
         clearTimeout(runner);
         runner = null;
       }
+    }
+
+    function saveCode() {
+      var dom = Blockly.Xml.workspaceToDom(demoWorkspace);
+      var xml = Blockly.Xml.domToText(dom);
+      //alert(xml);
+      httpPutAsync("/code/current.xml", function(ret){}, xml, "text/xml");
     }
 
     function runCode() {
