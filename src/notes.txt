@@ -1,0 +1,4 @@
+curl -X POST 'http://localhost/led?pin=4&value=on'
+
+# setup pigpio to start on boot
+sudo systemctl enable pigpiod

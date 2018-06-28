@@ -2,8 +2,9 @@
 #
 # https://blog.miguelgrinberg.com/post/designing-a-restful-api-with-python-and-flask
 #
-import os, sys
 
+import os, sys
+import pigpio
 from xml.dom import minidom
 from flask import Flask, render_template, request, jsonify
 
@@ -21,8 +22,50 @@ def main():
     return render_template('index.html')
 
 #
+# GPIO init
+#
+pi = pigpio.pi()
+
+pins = {
+   2 : {'name' : 'blue', 'state' : 0},
+   4 : {'name' : 'red',  'state' : 0}
+}
+for pin in pins:
+     pi.write(pin, pins[pin]['state'])
+
+#
 # Rest Services
 #
+@app.route('/pwm', methods=['POST'])
+def post_pwm():
+    pin=''
+    if 'pin' in request.args:
+        pin=int(request.args.get('pin'))
+
+        if 'value' in request.args:
+            value=float(request.args.get('value'))
+            print "LED "+str(pin)+ " " + str(value)
+            pi.set_PWM_dutycycle(pin, value * 255)
+
+    return "LED "+str(pin)+ " " + str(value) + "\n"
+
+# /led?pin=1
+@app.route('/led', methods=['POST'])
+def post_led():
+    pin=''
+    if 'pin' in request.args:
+        pin=int(request.args.get('pin'))
+
+        if 'value' in request.args:
+            value=request.args.get('value')
+            if value == 'on':
+                print "LED "+str(pin)+" on"
+                pi.write(pin, 1)
+            else:
+                print "LED "+str(pin)+" off"
+                pi.write(pin, 0)
+
+    return "pin=" + str(pin)
 
 # /gpio?pin=1
 @app.route('/gpio', methods=['GET'])
