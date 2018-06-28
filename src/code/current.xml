@@ -1,56 +1,49 @@
 <?xml version="1.0" ?>
 <xml xmlns="http://www.w3.org/1999/xhtml">
-  <variables>
-    <variable id="S-r=q,Q[MY4_oh%`W*Wr" type="">n</variable>
-  </variables>
-  <block id="set_n_initial" inline="true" type="variables_set" x="20" y="20">
-    <field id="S-r=q,Q[MY4_oh%`W*Wr" name="VAR" variabletype="">n</field>
-    <value name="VALUE">
-      <block id="-8Sr[RGy_JaY5G;q+9hq" type="math_number">
-        <field name="NUM">1</field>
+  <block id="s430JZ!OSmjP?nHJY$Vg" type="controls_repeat_ext" x="30" y="33">
+    <value name="TIMES">
+      <block id="G}3GoiVugGBN^KLa|m+C" type="math_number">
+        <field name="NUM">10</field>
       </block>
     </value>
-    <next>
-      <block id="repeat" inline="true" type="controls_repeat_ext">
-        <value name="TIMES">
-          <block id="~jXm3z(jH}k]/9b%}je@" type="math_number">
-            <field name="NUM">4</field>
-          </block>
-        </value>
-        <statement name="DO">
-          <block id="wait" type="wait_seconds">
-            <field name="SECONDS">1</field>
+    <statement name="DO">
+      <block id="ros1ut9*EImvA(q|DK`-" type="gpio">
+        <field name="PIN">2</field>
+        <field name="VALUE">0</field>
+        <next>
+          <block id="gpio" type="gpio">
+            <field name="PIN">4</field>
+            <field name="VALUE">1</field>
             <next>
-              <block id="set_n_update" inline="true" type="variables_set">
-                <field id="S-r=q,Q[MY4_oh%`W*Wr" name="VAR" variabletype="">n</field>
-                <value name="VALUE">
-                  <block id="/vOU/Zoi=t!U0/2WN@_*" type="math_arithmetic">
-                    <field name="OP">MULTIPLY</field>
-                    <value name="A">
-                      <block id="qOp]EU|cu7cYRqlm??Nj" type="variables_get">
-                        <field id="S-r=q,Q[MY4_oh%`W*Wr" name="VAR" variabletype="">n</field>
-                      </block>
-                    </value>
-                    <value name="B">
-                      <block id="mHT`#x6x$]kRswAZBU]$" type="math_number">
-                        <field name="NUM">2</field>
-                      </block>
-                    </value>
-                  </block>
-                </value>
+              <block id="wait" type="wait_seconds">
+                <field name="SECONDS">0.25</field>
                 <next>
-                  <block id="print" inline="false" type="text_print">
-                    <value name="TEXT">
-                      <block id="B/W!z(3/A6c73]$`y@cB" type="variables_get">
-                        <field id="S-r=q,Q[MY4_oh%`W*Wr" name="VAR" variabletype="">n</field>
+                  <block id="#Bl7!lx,$L_c_kgQdjTC" type="gpio">
+                    <field name="PIN">4</field>
+                    <field name="VALUE">0</field>
+                    <next>
+                      <block id="-~;3;.R5f}0dC#h/i(zS" type="gpio">
+                        <field name="PIN">2</field>
+                        <field name="VALUE">1</field>
+                        <next>
+                          <block id="2xi[n$d6iZsGIXhI~q.u" type="wait_seconds">
+                            <field name="SECONDS">0.25</field>
+                          </block>
+                        </next>
                       </block>
-                    </value>
+                    </next>
                   </block>
                 </next>
               </block>
             </next>
           </block>
-        </statement>
+        </next>
+      </block>
+    </statement>
+    <next>
+      <block id="lqwh*JnIh``S70a]MD1{" type="gpio">
+        <field name="PIN">2</field>
+        <field name="VALUE">0</field>
       </block>
     </next>
   </block>

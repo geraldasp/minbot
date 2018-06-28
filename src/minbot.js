@@ -47,6 +47,9 @@ var outputArea = document.getElementById('output');
       // Add an API for the wait block.  See wait_block.js
       initInterpreterWaitForSeconds(interpreter, scope);
 
+      // !!! Add new blocks here !!!
+      initInterpreterGpioWritePwm(interpreter, scope);
+
       // Add an API function for highlighting blocks.
       var wrapper = function(id) {
         id = id ? id.toString() : '';

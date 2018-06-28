@@ -40,5 +40,6 @@
   </category>
   <category id="catRobot" colour="60" name="Robot">
     <block type="wait_seconds" id="wait"></block>
+    <block type="gpio" id="gpio"></block>
   </category>
 </xml>
